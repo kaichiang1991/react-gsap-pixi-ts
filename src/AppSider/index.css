@@ -1,0 +1,24 @@
+aside {
+    width: 200px;
+    background-color: darkolivegreen;
+}
+
+aside ul {
+    height: 100vh;
+    list-style: none;
+    padding: 10%;
+    margin: 0;
+    text-align: left;
+}
+
+aside ul li {
+    border-bottom: 2px var(--secondary-color) solid;
+    margin-bottom: 24px;
+    padding-bottom: 4px;
+}
+
+aside ul li a {
+    width: 100%;
+    display: block;
+    color: var(--primary-color);
+}

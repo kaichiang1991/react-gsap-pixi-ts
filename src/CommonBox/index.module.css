@@ -1,0 +1,21 @@
+.box {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: ; */
+    gap: 5rem;
+}
+
+.shape {
+    width: 100px;
+    height: 100px;
+}
+
+.rect {
+    background-color: var(--primary-color);
+}
+
+.circle {
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+}
