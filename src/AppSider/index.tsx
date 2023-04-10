@@ -7,13 +7,9 @@ interface Props {}
 const AppSider: FC<Props> = (props: Props) => {
     const [toggle, setToggle] = useState<boolean>(true)
 
-    useEffect(() => {
-        console.log(location, location.pathname)
-    }, [toggle])
-
     return (
         <aside>
-            <ul onClick={() => setToggle(!toggle)}>
+            <ul>
                 {lists.map(list => (
                     <ListItem key={list.href} {...list} />
                 ))}
