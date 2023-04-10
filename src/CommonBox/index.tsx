@@ -36,3 +36,15 @@ const CommonBox: FC<Props> = ({ children, func, rectRef, circleRef }) => {
 }
 
 export default CommonBox
+
+// 另外的router頁面
+interface BoxProps {
+    children: ReactNode
+}
+export const RouterBox: FC<BoxProps> = ({ children }) => {
+    return (
+        <div className={[styles.box, styles.horizonBox].join(' ')}>
+            {children}
+        </div>
+    )
+}

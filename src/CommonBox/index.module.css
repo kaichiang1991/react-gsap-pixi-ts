@@ -19,3 +19,7 @@
     background-color: var(--secondary-color);
     border-radius: 50%;
 }
+
+.horizonBox {
+    flex-direction: row;
+}
