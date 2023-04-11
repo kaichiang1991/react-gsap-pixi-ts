@@ -2,7 +2,10 @@ import React, {
     Dispatch,
     FC,
     FormEventHandler,
+    MouseEventHandler,
     SetStateAction,
+    useCallback,
+    useRef,
     useState,
 } from 'react'
 import { RouterBox } from '../CommonBox'
@@ -15,14 +18,19 @@ interface Props {}
 
 const PixiTest: FC<Props> = (props: Props) => {
     const [options, setOptions] = useState<wheelOption[]>([])
-    const handleSubmit: FormEventHandler<HTMLFormElement> = e => {
-        e.preventDefault()
+    const [startGame, setStartGame] = useState<boolean>(false)
+
+    const complete = useCallback(() => {
+        setStartGame(false)
+    }, [])
+
+    const handleStartGame: MouseEventHandler<HTMLButtonElement> = e => {
+        setStartGame(true)
     }
 
     return (
         <RouterBox>
             <Stage
-                raf={false} // use gsap here
                 width={800}
                 height={800}
                 options={{
@@ -32,19 +40,42 @@ const PixiTest: FC<Props> = (props: Props) => {
                     height: 800,
                 }}
             >
-                <WheelContainer options={options} />
+                <WheelContainer
+                    options={options}
+                    startGame={startGame}
+                    complete={complete}
+                />
             </Stage>
-            <WheelForm setOptions={setOptions} options={options} />
+            <div>
+                <WheelForm
+                    handleStartGame={handleStartGame}
+                    setOptions={setOptions}
+                    options={options}
+                />
+                <button
+                    className="play-button"
+                    type="button"
+                    onClick={handleStartGame}
+                    disabled={startGame}
+                >
+                    開始
+                </button>
+            </div>
         </RouterBox>
     )
 }
 
 interface IWheelFormProps {
+    handleStartGame: MouseEventHandler<HTMLButtonElement>
     options: wheelOption[]
     setOptions: Dispatch<SetStateAction<wheelOption[]>>
 }
 
-const WheelForm: FC<IWheelFormProps> = ({ setOptions, options }) => {
+const WheelForm: FC<IWheelFormProps> = ({
+    setOptions,
+    options,
+    handleStartGame,
+}) => {
     const [option, setOption] = useState<string>()
     const [count, setCount] = useState<number>()
     const [allOptions, setAllOptions] = useState<wheelOption[]>(options)
@@ -87,7 +118,9 @@ const WheelForm: FC<IWheelFormProps> = ({ setOptions, options }) => {
                         </li>
                     ))}
                 </ul>
-                <button onClick={() => setOptions(allOptions)}>確認更改</button>
+                <button type="button" onClick={() => setOptions(allOptions)}>
+                    確認更改
+                </button>
             </form>
         </>
     )

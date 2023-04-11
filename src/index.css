@@ -14,6 +14,8 @@
     -webkit-text-size-adjust: 100%;
     --primary-color: #37ff90;
     --secondary-color: #929e21;
+    --danger-color: #e10505;
+    --danger-secondary-color: #dc9722;
 }
 
 a {
