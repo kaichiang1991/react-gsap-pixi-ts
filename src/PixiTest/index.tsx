@@ -8,13 +8,9 @@ import React, {
 import { RouterBox } from '../CommonBox'
 import { Stage, Container, Sprite, Text } from '@pixi/react'
 import './index.css'
+import WheelContainer from './Wheel'
 
-interface WheelOptions {
-    speed: number
-    count: number
-}
-
-type wheelOption = [string, number]
+export type wheelOption = [string, number]
 interface Props {}
 
 const PixiTest: FC<Props> = (props: Props) => {
@@ -27,11 +23,17 @@ const PixiTest: FC<Props> = (props: Props) => {
         <RouterBox>
             <Stage
                 raf={false} // use gsap here
+                width={800}
+                height={800}
                 options={{
                     backgroundAlpha: 0,
                     resolution: 1,
+                    width: 800,
+                    height: 800,
                 }}
-            ></Stage>
+            >
+                <WheelContainer options={options} />
+            </Stage>
             <WheelForm setOptions={setOptions} options={options} />
         </RouterBox>
     )
