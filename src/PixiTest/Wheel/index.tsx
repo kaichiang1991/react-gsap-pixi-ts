@@ -20,18 +20,29 @@ type IContainer = PixiRef<typeof Container> // PIXI.Container
 const WheelContainer: FC<Props> = ({ options, startGame, complete }) => {
     const contRef = useRef<IContainer>(null)
     const result = useHandleData(options)
-    const { wheel, middleCircle, textArr } = useHandleGraphics(result)
+    const { wheel, arrow, middleCircle, textArr } = useHandleGraphics(result)
 
     useHandleActions(startGame, result, contRef, complete)
 
     return (
-        <Container position={[400, 400]} ref={contRef}>
-            <Graphics draw={wheel} />
-            <Graphics draw={middleCircle} />
-            {textArr.map((text, index) => (
-                <Text key={`${index}_${text.text}`} {...text} />
-            ))}
-        </Container>
+        <>
+            <Container position={[400, 400]} ref={contRef}>
+                <Graphics draw={wheel} />
+                <Graphics draw={middleCircle} />
+                {textArr.map((text, index) => (
+                    <Text key={`${index}_${text.text}`} {...text} />
+                ))}
+            </Container>
+            <Graphics
+                draw={arrow}
+                anchor={[0, 0.5]}
+                angle={0}
+                position={[
+                    400 + eWheelConfig.radius + eWheelConfig.arrowOffset,
+                    400,
+                ]}
+            />
+        </>
     )
 }
 

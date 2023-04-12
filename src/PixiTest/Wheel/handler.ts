@@ -17,7 +17,7 @@ import {
     Rad2Deg,
     Deg2Rad,
 } from './lib'
-import gsap, { Linear, Power3 } from 'gsap'
+import gsap, { Linear, Power2, Power3 } from 'gsap'
 
 type Draw = ComponentProps<typeof Graphics>['draw']
 type IContainer = PixiRef<typeof Container> // PIXI.Container
@@ -58,6 +58,7 @@ interface TextResult {
 }
 interface GraphicsResult {
     middleCircle: Draw // 中間的圓圈
+    arrow: Draw // 箭頭
     wheel: Draw
     textArr: TextResult[]
 }
@@ -65,6 +66,14 @@ export const useHandleGraphics = (data: DataResult): GraphicsResult => {
     // 中間的白色錨點
     const middleCircle: Draw = useCallback<any>((g: PIXIGraphics) => {
         g.clear().beginFill('0xFFF').drawCircle(0, 0, 30).endFill()
+    }, [])
+
+    // 最後落定箭頭
+    const arrow: Draw = useCallback<any>((g: PIXIGraphics) => {
+        g.clear()
+            .beginFill('0xFFF')
+            .drawPolygon([0, 0, 50, -15, 50, 15])
+            .endFill()
     }, [])
 
     // 整個輪盤
@@ -120,6 +129,7 @@ export const useHandleGraphics = (data: DataResult): GraphicsResult => {
 
     return {
         middleCircle,
+        arrow,
         wheel,
         textArr,
     }
@@ -147,7 +157,9 @@ export const useHandleActions = (
             const nameArr: string[] = Object.entries(data).map(
                 _data => _data[0]
             )
-            return gsap.utils.shuffle(nameArr)[0]
+            const result: string = gsap.utils.shuffle(nameArr)[0]
+            console.log('result: ', result)
+            return result
         }
 
         // 取得結果徑度
@@ -164,6 +176,7 @@ export const useHandleActions = (
                     .reduce((pre, curr) => pre + curr[1], 0),
                 randomRadian: number =
                     gsap.utils.random(startOdds, endOdds) * PI_2
+
             console.log({
                 index,
                 startOdds,
@@ -175,29 +188,30 @@ export const useHandleActions = (
 
         // 開始遊戲
         const ctx: gsap.Context = gsap.context(() => {
-            gsap.timeline({ defaults: { ease: Linear.easeNone } })
-                // 演出繞圈
-                .to(containerRef.current, {
-                    rotation: `+=${PI_2}`,
-                    duration: 1,
-                    repeat: gsap.utils.random(2, 4, 1),
+            const container: IContainer = containerRef.current!
+            let rotationRadian: number = gsap.utils.random(3, 5, 1) * PI_2 // 多轉幾圈
+            const finalRadian: number = gsap.utils.mapRange(
+                0,
+                PI_2,
+                rotationRadian,
+                rotationRadian + PI_2,
+                getRadian(getResult())
+            )
+            console.log('finalRadian:', Rad2Deg(finalRadian))
+
+            gsap.timeline()
+                .to(container, {
+                    rotation: finalRadian,
+                    duration: 3,
+                    ease: Power2.easeOut,
                 })
-                // 跑完演出
-                .to(containerRef.current, {
-                    rotation: `+=${PI_2 - containerRef.current!.rotation}`,
-                    duration:
-                        ((PI_2 - containerRef.current!.rotation) / PI_2) * 1,
-                })
-                // 結果
-                .to(containerRef.current, {
-                    rotation: `+=${getRadian(getResult())}`,
-                    duration: 1,
-                    ease: Power3.easeOut,
-                })
+                .set(container, { rotation: finalRadian % PI_2 })
                 .eventCallback('onComplete', complete)
         }, containerRef)
 
-        return () => ctx.revert()
+        // return () => {
+        //     ctx.revert()
+        // }
     }, [startGame, complete])
 
     return { playing }

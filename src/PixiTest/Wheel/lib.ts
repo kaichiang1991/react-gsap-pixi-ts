@@ -3,8 +3,9 @@ import { DEG_TO_RAD, RAD_TO_DEG } from 'pixi.js'
 
 // 其他設定
 export enum eWheelConfig {
-    radius = 350,
-    textRadius = 200,
+    radius = 300,
+    textRadius = 150,
+    arrowOffset = 20,
 }
 
 // 角度轉換
